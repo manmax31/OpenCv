@@ -7,8 +7,8 @@ import argparse
 from skimage.filter import threshold_adaptive
 import cv2
 
-from pyimagesearch.transform import four_point_transform
-from pyimagesearch import imutils
+from libs.transform import four_point_transform
+from libs import imutils
 
 
 # construct the argument parser and parse the arguments
@@ -20,7 +20,7 @@ from pyimagesearch import imutils
 # load the image and compute the ratio of the old height
 # to the new height, clone it, and resize it
 #image = cv2.imread(args["image"])
-image_path = "/Users/manabchetia/Documents/PyCharm/OpenCV/document-scanner/images/page.jpg"
+image_path = "/Users/manabchetia/Documents/PyCharm/OpenCV/document-scanner/images/IMG_1756.JPG"
 image = cv2.imread(image_path)
 
 ratio = image.shape[0] / 500.0

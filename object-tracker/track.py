@@ -39,8 +39,7 @@ def main():
     # points and whether or not it is ROI selection mode
     global frame, roiPts, inputMode
 
-    # if the video path was not supplied, grab the reference to the
-    # camera
+    # if the video path was not supplied, grab the reference to the camera
     if not args.get("video", False):
         camera = cv2.VideoCapture(0)
 
@@ -106,8 +105,7 @@ def main():
             tl = roiPts[np.argmin(s)]
             br = roiPts[np.argmax(s)]
 
-            # grab the ROI for the bounding box and convert it
-            # to the HSV color space
+            # grab the ROI for the bounding box and convert it to the HSV color space
             roi = orig[tl[1]:br[1], tl[0]:br[0]]
             roi = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
             # roi = cv2.cvtColor(roi, cv2.COLOR_BGR2LAB)

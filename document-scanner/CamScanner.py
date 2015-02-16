@@ -36,6 +36,7 @@ def get_4_corners(edge_image):
     :return page: contour information of the page
     """
     contours = get_contours(edge_image)
+
     for contour in contours:
         epsilon = 0.02 * cv2.arcLength(contour, True)
         approx = cv2.approxPolyDP(contour, epsilon, True)
@@ -45,7 +46,7 @@ def get_4_corners(edge_image):
 
     page = cv2.convexHull(corners_4)
 
-    return page
+    return page, contours
 
 
 def main():
@@ -54,7 +55,7 @@ def main():
     """
 
     # Read Image
-    image_path = "/Users/manabchetia/Documents/PyCharm/OpenCV/document-scanner/images/receipt.JPG"
+    image_path = "/Users/manabchetia/Documents/PyCharm/OpenCV/document-scanner/images/IMG_1757.jpg"
     orig_image = cv2.imread(image_path)
 
     # Resize Image
@@ -64,11 +65,15 @@ def main():
 
     # Gray Image
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    edge_image = cv2.Canny(gray_image, 75, 200)
+    _, binary_image = cv2.threshold(gray_image, 100, 255, cv2.THRESH_BINARY)
+    cv2.imshow("Binary Image", binary_image)
+    edge_image = cv2.Canny(binary_image, 75, 200)
 
     # Get 4 corners of page
-    page = get_4_corners(edge_image)
-    cv2.drawContours(image, page, -1,  (0, 255, 0), 2)
+    page, contours = get_4_corners(edge_image)
+    cv2.drawContours(image, contours, -1,  (0, 255, 0), 2)
+    # cv2.imshow("Outline", image)
+
 
     # Get top-down view of original image using 4 point transform
     top_view_image = four_point_transform(orig_image, page.reshape(4, 2) * ratio)
@@ -76,8 +81,9 @@ def main():
     top_view_image = threshold_adaptive(top_view_image, 255, offset=10)
     scanned_image  = top_view_image.astype("uint8") * 255
 
-    cv2.imshow("Scanned image", imutils.resize(scanned_image, height=650, width=650))
+    # cv2.imshow("Scanned image", imutils.resize(scanned_image, height=650))
     cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 if __name__ == '__main__': main()
 
